@@ -1,0 +1,17 @@
+ipython
+scikit-learn
+matplotlib
+opencv-python
+streamlit==1.27.0
+ftfy 
+regex 
+tqdm
+memory_profiler
+plotly==5.17.0
+pyyaml
+streamlit-authenticator
+streamlit-image-annotation
+minio
+sqlalchemy
+openai
+psycopg2

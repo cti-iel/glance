@@ -1,0 +1,64 @@
+version: "3.8"
+services:
+ strlit:
+  container_name: glance
+  build:
+   context: .
+   dockerfile: Dockerfile
+  image: glance:1.0
+  ports:
+   - 15000:15000
+  networks:
+   - glance_network
+  restart: always 
+ 
+ services_test:
+  container_name: mn_test
+  build:
+   context: .
+   dockerfile: Dockerfile-test
+  image: mn_test
+  networks:
+   - glance_network
+  restart: always 
+
+ minio:
+  image: docker.io/bitnami/minio:2022
+  container_name: glance_minio
+  hostname: glance_minio
+  ports:
+    - '19000:9000'
+    - '19001:9001'
+  networks:
+    - glance_network
+  volumes:
+    - 'minio_db_glance:/data'
+  environment:
+    - MINIO_ROOT_USER=iel
+    - MINIO_ROOT_PASSWORD=twinemac.pannasal
+    - MINIO_DEFAULT_BUCKETS=astemo.hk.smt14
+  restart: always
+
+ postgres_db:
+  image: postgres:16.2-alpine
+  container_name: glance_llm_insights_db 
+  hostname: postgres_db
+  restart: always
+  environment:
+    POSTGRES_USER: postgres 
+    POSTGRES_PASSWORD: twinemac.pannasal
+  ports:
+  - '15432:5432'
+  volumes:
+  - postgres_db_glance:/var/lib/postgresql/data
+  networks:
+   - glance_network
+
+networks:
+ glance_network:
+
+volumes:
+  postgres_db_glance:
+    driver: local
+  minio_db_glance:
+    driver: local 
